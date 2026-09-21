@@ -13,13 +13,22 @@ if (typeof window !== "undefined") {
   setInterval(removeNetlifyBadge, 1000)
 }
 
-// Register PWA Service Worker for standalone Android App support
-if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch((err) => {
-      console.log('ServiceWorker registration skipped:', err)
-    })
-  })
+// Clean up any stale service workers or old caches from previous builds
+if (typeof window !== "undefined" && 'serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then((registrations) => {
+    for (const reg of registrations) {
+      reg.unregister().catch(() => {})
+    }
+  }).catch(() => {})
+  if ('caches' in window) {
+    caches.keys().then((keys) => {
+      keys.forEach((key) => {
+        if (key.includes('campushub') || key.includes('v1')) {
+          caches.delete(key).catch(() => {})
+        }
+      })
+    }).catch(() => {})
+  }
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(
