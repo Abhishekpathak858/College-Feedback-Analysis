@@ -19,19 +19,57 @@ export function AuthProvider({ children }) {
           customProfile = JSON.parse(localStorage.getItem("user_custom_profile") || "{}")
         } catch (e) {}
         if (currentUser) {
-          setUser({ ...currentUser, ...customProfile, avatarUrl: savedAvatar || currentUser.avatarUrl })
+          const merged = { ...currentUser, ...customProfile, avatarUrl: savedAvatar || currentUser.avatarUrl }
+          setUser(merged)
+          localStorage.setItem("campussphere_current_user", JSON.stringify(merged))
+        } else {
+          // Check local stored session fallback
+          const localStored = localStorage.getItem("campussphere_current_user")
+          if (localStored) {
+            try {
+              const parsed = JSON.parse(localStored)
+              if (parsed && typeof parsed === "object") {
+                setUser({ ...parsed, ...customProfile, avatarUrl: savedAvatar || parsed.avatarUrl })
+              } else {
+                setUser(null)
+              }
+            } catch (e) {
+              setUser(null)
+            }
+          } else {
+            setUser(null)
+          }
+        }
+      } catch (err) {
+        console.warn("Auth initialization warning, checking local session:", err)
+        const localStored = localStorage.getItem("campussphere_current_user")
+        if (localStored) {
+          try {
+            setUser(JSON.parse(localStored))
+          } catch (e) {
+            setUser(null)
+          }
         } else {
           setUser(null)
         }
-      } catch (err) {
-        console.error("Auth initialization error:", err)
-        setUser(null)
       } finally {
         setLoading(false)
       }
     }
     checkAuth()
   }, [])
+
+  const loginDirect = (userData) => {
+    const savedAvatar = localStorage.getItem("user_profile_avatar")
+    const updated = { ...userData, avatarUrl: savedAvatar || userData.avatarUrl }
+    setUser(updated)
+    try {
+      localStorage.setItem("campussphere_current_user", JSON.stringify(updated))
+    } catch (e) {}
+    sessionStorage.setItem("show_welcome_celebration", "true")
+    triggerPartyPopperConfetti()
+    return updated
+  }
 
   const login = async (email, password) => {
     const loggedUser = await apiClient.auth.login(email, password)
@@ -42,6 +80,9 @@ export function AuthProvider({ children }) {
     } catch (e) {}
     const updated = { ...loggedUser, ...customProfile, avatarUrl: savedAvatar || loggedUser.avatarUrl }
     setUser(updated)
+    try {
+      localStorage.setItem("campussphere_current_user", JSON.stringify(updated))
+    } catch (e) {}
     sessionStorage.setItem("show_welcome_celebration", "true")
     triggerPartyPopperConfetti()
     return updated
@@ -50,6 +91,9 @@ export function AuthProvider({ children }) {
   const register = async (userData) => {
     const newUser = await apiClient.auth.register(userData)
     setUser(newUser)
+    try {
+      localStorage.setItem("campussphere_current_user", JSON.stringify(newUser))
+    } catch (e) {}
     sessionStorage.setItem("show_welcome_celebration", "true")
     triggerPartyPopperConfetti()
     return newUser
@@ -58,18 +102,22 @@ export function AuthProvider({ children }) {
   const loginWithGoogle = async () => {
     const googleUser = await apiClient.auth.loginWithGoogle()
     setUser(googleUser)
+    try {
+      localStorage.setItem("campussphere_current_user", JSON.stringify(googleUser))
+    } catch (e) {}
     return googleUser
   }
 
   const updateProfile = async (data) => {
     setUser((prev) => {
-      const updated = { ...prev, ...data }
+      const updated = { ...(prev || {}), ...data }
       if (data.avatarUrl) {
         localStorage.setItem("user_profile_avatar", data.avatarUrl)
       }
       try {
         const storedCustomData = JSON.parse(localStorage.getItem("user_custom_profile") || "{}")
         localStorage.setItem("user_custom_profile", JSON.stringify({ ...storedCustomData, ...data }))
+        localStorage.setItem("campussphere_current_user", JSON.stringify(updated))
       } catch (e) {}
       return updated
     })
@@ -85,12 +133,15 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
+      localStorage.removeItem("campussphere_current_user")
       localStorage.removeItem("user_profile_avatar")
       localStorage.removeItem("user_custom_profile")
       localStorage.removeItem("campushub_conversations")
       localStorage.removeItem("campushub_messages_map")
     } catch {}
-    await apiClient.auth.logout()
+    try {
+      await apiClient.auth.logout()
+    } catch (e) {}
     setUser(null)
   }
 
@@ -100,6 +151,7 @@ export function AuthProvider({ children }) {
         user,
         loading,
         login,
+        loginDirect,
         register,
         loginWithGoogle,
         updateProfile,

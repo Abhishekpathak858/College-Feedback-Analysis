@@ -30,21 +30,48 @@ import {
 } from "lucide-react"
 import { apiClient } from "@/api/apiClient"
 
-function formatPostTime(dateString) {
-  if (!dateString) return "2 hours ago"
-  const date = new Date(dateString)
-  if (isNaN(date.getTime())) return dateString
+function formatPostTime(dateVal) {
+  if (!dateVal) return "Recently"
+  let date;
+  if (typeof dateVal === "object" && typeof dateVal.toDate === "function") {
+    date = dateVal.toDate()
+  } else if (typeof dateVal === "object" && dateVal.seconds) {
+    date = new Date(dateVal.seconds * 1000)
+  } else {
+    date = new Date(dateVal)
+  }
+
+  if (isNaN(date.getTime())) return "Recently"
 
   const now = new Date()
   const diffSec = Math.floor((now - date) / 1000)
 
   if (diffSec < 60) return "Just now"
-  if (diffSec < 3600) return `${Math.floor(diffSec / 60)} minutes ago`
-  if (diffSec < 86400) return `${Math.floor(diffSec / 3600)} hours ago`
+  if (diffSec < 3600) return `${Math.max(1, Math.floor(diffSec / 60))}m ago`
+  if (diffSec < 86400) return `${Math.floor(diffSec / 3600)}h ago`
   if (diffSec < 172800) return "Yesterday at " + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   
   return date.toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) + " at " + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 }
+
+function parseDateMs(val) {
+  if (!val) return 0
+  if (typeof val === "object" && typeof val.toDate === "function") return val.toDate().getTime()
+  if (typeof val === "object" && val.seconds) return val.seconds * 1000
+  const t = new Date(val).getTime()
+  return isNaN(t) ? 0 : t
+}
+
+function renderText(val, fallback = "") {
+  if (val === null || val === undefined) return fallback
+  if (typeof val === "string") return val
+  if (typeof val === "number" || typeof val === "boolean") return String(val)
+  if (typeof val === "object") {
+    return val.name || val.title || val.text || val.comment || fallback
+  }
+  return fallback
+}
+
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -84,8 +111,8 @@ export default function SocialFeed({ feedbacks, onStartChat }) {
 
   const feedList = Array.isArray(feedbacks) ? feedbacks : []
   const sortedFeedbacks = [...feedList]
-    .filter(f => f && !hiddenPosts.includes(f.id) && Boolean(f.evidencePhotoUrl || f.mediaUrl || f.isMediaPost))
-    .sort((a, b) => new Date(b.createdAt || b.created_at || Date.now()) - new Date(a.createdAt || a.created_at || Date.now()))
+    .filter(f => f && typeof f === "object" && !hiddenPosts.includes(f.id))
+    .sort((a, b) => parseDateMs(b.createdAt || b.created_at || b.submittedAt) - parseDateMs(a.createdAt || a.created_at || a.submittedAt))
 
   const handleReportSubmit = () => {
     if (!reportPost) return
@@ -313,9 +340,9 @@ export default function SocialFeed({ feedbacks, onStartChat }) {
                 {/* Media Container: Natural aspect ratio, full image/video display without any cropping */}
                 {post.evidencePhotoUrl && !failedMedia[post.id] ? (
                   <div className="w-full bg-[#050e24] relative flex items-center justify-center overflow-hidden border-y border-white/[0.08] my-1">
-                    {post.evidencePhotoUrl.includes("video") || post.mediaType === "video" ? (
+                    {(typeof post.evidencePhotoUrl === "string" && post.evidencePhotoUrl.includes("video")) || post.mediaType === "video" ? (
                       <video 
-                        src={post.evidencePhotoUrl} 
+                        src={typeof post.evidencePhotoUrl === "string" ? post.evidencePhotoUrl : ""} 
                         className="w-full h-auto max-h-[580px] object-contain block mx-auto" 
                         controls 
                         playsInline
@@ -323,8 +350,8 @@ export default function SocialFeed({ feedbacks, onStartChat }) {
                       />
                     ) : (
                       <img 
-                        src={post.evidencePhotoUrl} 
-                        alt={post.title || "Campus Post"} 
+                        src={typeof post.evidencePhotoUrl === "string" ? post.evidencePhotoUrl : ""} 
+                        alt={renderText(post.title, "Campus Post")} 
                         className="w-full h-auto max-h-[580px] object-contain block mx-auto select-none" 
                         onError={() => setFailedMedia(prev => ({ ...prev, [post.id]: true }))}
                       />
@@ -336,16 +363,16 @@ export default function SocialFeed({ feedbacks, onStartChat }) {
                 <div className="p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#2563EB]/15 text-[#60A5FA] border border-[#2563EB]/25">
-                      {post.category || "General"}
+                      {renderText(post.category, "General")}
                     </span>
                   </div>
 
                   <h3 className="font-bold text-[#F8FAFC] text-base leading-snug">
-                    {post.title}
+                    {renderText(post.title, "Campus Post")}
                   </h3>
 
                   <p className="text-xs text-[#A8B5CC] font-normal leading-relaxed">
-                    {post.comment}
+                    {renderText(post.comment, "")}
                   </p>
 
                   {/* Timestamp Displayed Below Post Content */}

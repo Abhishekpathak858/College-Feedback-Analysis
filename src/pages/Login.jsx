@@ -7,7 +7,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { Phone, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react"
 
 export default function Login() {
-  const { login, register, updateProfile, loginWithGoogle } = useAuth()
+  const { login, loginDirect, register, updateProfile, loginWithGoogle } = useAuth()
   const navigate = useNavigate()
   const { toast } = useToast()
 
@@ -142,18 +142,20 @@ export default function Login() {
             throw new Error("Incorrect password. Please try again.")
           }
           loggedUser = localFound
-          updateProfile(localFound)
+          loginDirect(localFound)
         } else if (isAdminLogin) {
           loggedUser = {
+            id: "admin-abhishek",
+            uid: "admin-abhishek",
             fullName: "Abhishek Pathak",
             email: "abhishekpathakrp_ds24@its.edu.in",
             phone: "9625212204",
             role: "admin",
             isSuperAdmin: true,
-            collegeName: "",
-            department: ""
+            collegeName: "ITS Engineering College, Greater Noida",
+            department: "Computer Science & Engineering"
           }
-          updateProfile(loggedUser)
+          loginDirect(loggedUser)
         } else {
           throw new Error("Account not found with this ID. Please Sign Up to create your ID first!")
         }

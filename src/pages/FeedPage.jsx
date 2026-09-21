@@ -10,7 +10,9 @@ import { useToast } from "@/components/ui/use-toast"
 export default function FeedPage() {
   const { user } = useAuth()
   const { toast } = useToast()
-  const firstName = user?.fullName ? user.fullName.split(" ")[0] : "Student"
+  const firstName = (typeof user?.fullName === "string" && user.fullName.trim().length > 0)
+    ? user.fullName.split(" ")[0] 
+    : "Student"
   const [feedbacks, setFeedbacks] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
@@ -21,33 +23,46 @@ export default function FeedPage() {
   const loadFeedbacks = async () => {
     try {
       setLoading(true)
-      const data = await apiClient.entities.Feedback.list()
+      let data = []
+      try {
+        data = await apiClient.entities.Feedback.list()
+      } catch (err) {
+        console.warn("Feedback list error:", err)
+        data = []
+      }
+      if (!Array.isArray(data)) data = []
       
       // Merge with newly created posts saved in localStorage
       let localPosts = []
       try {
-        localPosts = JSON.parse(localStorage.getItem("campushub_user_posts") || "[]")
-      } catch {}
+        const stored = localStorage.getItem("campushub_user_posts")
+        localPosts = stored ? JSON.parse(stored) : []
+      } catch {
+        localPosts = []
+      }
+      if (!Array.isArray(localPosts)) localPosts = []
 
       // Deduplicate posts by ID so duplicate items never render twice (server data takes precedence)
       const combined = [...localPosts, ...data]
-      const uniquePosts = Array.from(new Map(combined.filter(Boolean).map(item => [item.id, item])).values())
+      const uniquePosts = Array.from(
+        new Map(combined.filter(Boolean).map(item => [item.id || item.title || Math.random(), item])).values()
+      )
 
-      // STRICT: Only keep posts created with photo or video (via '+' button). Exclude pure review data.
-      const mediaPostsOnly = uniquePosts.filter(item => {
-        return Boolean(item.evidencePhotoUrl || item.mediaUrl || item.isMediaPost)
+      // Keep all valid posts (media posts, complaints, reviews)
+      const validPosts = uniquePosts.filter(item => {
+        return Boolean(item && (item.title || item.comment || item.collegeName))
       })
 
       // Sync local storage so corrected server posts overwrite any stale local cache
-      if (localPosts.length > 0 && data.length > 0) {
-        const serverMap = new Map(data.map(d => [d.id, d]))
-        const updatedLocal = localPosts.map(p => serverMap.get(p.id) || p)
+      if (Array.isArray(localPosts) && localPosts.length > 0 && Array.isArray(data) && data.length > 0) {
         try {
+          const serverMap = new Map(data.filter(Boolean).map(d => [d.id, d]))
+          const updatedLocal = localPosts.map(p => serverMap.get(p.id) || p)
           localStorage.setItem("campushub_user_posts", JSON.stringify(updatedLocal))
         } catch {}
       }
 
-      setFeedbacks(mediaPostsOnly)
+      setFeedbacks(validPosts.length > 0 ? validPosts : data)
     } catch (e) {
       console.error("Error loading feedbacks:", e)
     } finally {
@@ -92,11 +107,9 @@ export default function FeedPage() {
     }
   }, [])
 
-  // Filter feedbacks based on search query and category (strictly media posts only)
-  const filteredFeedbacks = feedbacks.filter(f => {
+  // Filter feedbacks based on search query and category
+  const filteredFeedbacks = (Array.isArray(feedbacks) ? feedbacks : []).filter(f => {
     if (!f) return false
-    // Compulsory: Only show posts that have image or video
-    if (!f.evidencePhotoUrl && !f.mediaUrl && !f.isMediaPost) return false
 
     const q = (searchQuery || "").toLowerCase().trim()
     const matchesSearch = !q || [
