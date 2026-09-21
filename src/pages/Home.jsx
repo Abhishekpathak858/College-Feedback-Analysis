@@ -51,9 +51,10 @@ export default function Home() {
     try {
       setLoading(true)
       const data = await apiClient.entities.Feedback.list()
-      setFeedbacks(data)
+      setFeedbacks(Array.isArray(data) ? data : [])
     } catch (e) {
       console.error(e)
+      setFeedbacks([])
     } finally {
       setLoading(false)
     }
@@ -69,13 +70,14 @@ export default function Home() {
   }
 
   // Aggregate stats for Hero
+  const safeFeedbacks = Array.isArray(feedbacks) ? feedbacks : []
   const stats = {
-    total: feedbacks.length,
-    positiveRatio: feedbacks.length
-      ? Math.round((feedbacks.filter((f) => f.sentiment?.includes("Good")).length / feedbacks.length) * 100)
+    total: safeFeedbacks.length,
+    positiveRatio: safeFeedbacks.length
+      ? Math.round((safeFeedbacks.filter((f) => f.sentiment?.includes("Good")).length / safeFeedbacks.length) * 100)
       : 85,
-    avgRating: feedbacks.length
-      ? (feedbacks.reduce((acc, curr) => acc + Number(curr.rating || 0), 0) / feedbacks.length).toFixed(1)
+    avgRating: safeFeedbacks.length
+      ? (safeFeedbacks.reduce((acc, curr) => acc + Number(curr.rating || 0), 0) / safeFeedbacks.length).toFixed(1)
       : "4.5",
   }
 
