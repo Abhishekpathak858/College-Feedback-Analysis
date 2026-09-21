@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.trycloudflare.engineer_steel_knit_teenage.twa",
+        "sha256_cert_fingerprints": ["BF:F4:90:47:0D:A6:0C:E0:3C:9A:C8:A1:AC:B4:9A:08:13:DB:50:8E:A1:7B:31:69:9C:CB:F1:B3:4D:1B:EA:CC"]
+      }
+    }]

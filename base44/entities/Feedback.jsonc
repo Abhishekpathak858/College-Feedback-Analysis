@@ -1,0 +1,111 @@
+{
+  "name": "Feedback",
+  "description": "Student feedback entries with academic metrics and sentiment classification",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for feedback"
+    },
+    "title": {
+      "type": "string",
+      "description": "Brief headline or summary of feedback"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Faculty & Teaching",
+        "Curriculum & Syllabus",
+        "Laboratory & Equipments",
+        "Library & Learning Resources",
+        "Campus Infrastructure",
+        "Hostel & Living",
+        "Canteen & Food",
+        "Placement & Career Support",
+        "Administration & Governance",
+        "General Feedback"
+      ],
+      "description": "Feedback category"
+    },
+    "department": {
+      "type": "string",
+      "enum": [
+        "Computer Science & Engineering",
+        "Information Technology",
+        "Electronics & Communication",
+        "Mechanical Engineering",
+        "Civil Engineering",
+        "Electrical & Electronics",
+        "Business Administration (MBA)",
+        "Applied Sciences & Humanities"
+      ],
+      "description": "Academic Department"
+    },
+    "facultyName": {
+      "type": "string",
+      "description": "Optional faculty member name"
+    },
+    "courseName": {
+      "type": "string",
+      "description": "Course or Subject name"
+    },
+    "yearOfStudy": {
+      "type": "string",
+      "enum": ["1st Year", "2nd Year", "3rd Year", "4th Year", "Postgraduate", "Alumni"],
+      "description": "Academic year of the submitting student"
+    },
+    "rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Overall numerical rating 1 to 5"
+    },
+    "subRatings": {
+      "type": "object",
+      "properties": {
+        "clarity": { "type": "number" },
+        "helpfulness": { "type": "number" },
+        "infrastructure": { "type": "number" },
+        "timeliness": { "type": "number" }
+      }
+    },
+    "comment": {
+      "type": "string",
+      "description": "Detailed text comment from student"
+    },
+    "sentiment": {
+      "type": "string",
+      "enum": ["Positive", "Neutral", "Negative"],
+      "description": "AI Sentiment Classification"
+    },
+    "sentimentScore": {
+      "type": "number",
+      "description": "Normalized sentiment polarity score from -1.0 to +1.0"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Extracted key phrases or aspect tags"
+    },
+    "isAnonymous": {
+      "type": "boolean",
+      "default": false
+    },
+    "studentName": {
+      "type": "string",
+      "description": "Name of student (if not anonymous)"
+    },
+    "studentEmail": {
+      "type": "string",
+      "description": "Email of student (if not anonymous)"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["Reviewed", "Pending", "Action Required", "Resolved"],
+      "default": "Pending"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

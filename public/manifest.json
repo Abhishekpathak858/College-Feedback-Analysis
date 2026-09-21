@@ -1,0 +1,24 @@
+{
+  "name": "CampusSphere",
+  "short_name": "CampusSphere",
+  "description": "Student Community, College Reviews & Campus Intelligence",
+  "start_url": "/feed",
+  "display": "standalone",
+  "background_color": "#07142F",
+  "theme_color": "#07142F",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/campushub-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/campushub-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

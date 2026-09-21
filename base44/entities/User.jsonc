@@ -1,0 +1,40 @@
+{
+  "name": "User",
+  "description": "User entity for students, faculty, and administrators in the feedback system",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for user"
+    },
+    "fullName": {
+      "type": "string",
+      "description": "User's full name"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "User's institutional or personal email"
+    },
+    "role": {
+      "type": "string",
+      "enum": ["student", "faculty", "admin", "department_head"],
+      "default": "student"
+    },
+    "department": {
+      "type": "string",
+      "description": "Associated department"
+    },
+    "rollNumber": {
+      "type": "string",
+      "description": "Student roll/registration number (if student)"
+    },
+    "avatarUrl": {
+      "type": "string",
+      "description": "Profile image URL"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

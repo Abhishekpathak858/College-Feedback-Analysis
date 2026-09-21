@@ -1,0 +1,386 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Hide Netlify Badge / HUD Floating Drawer completely */
+iframe[src*="netlify"],
+iframe[title*="Netlify"],
+div[data-nf-variant],
+[class*="netlify"],
+[id*="netlify"],
+script[src*="netlify/scripts/hud"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Animated Cyber Mesh & Neon Glow Backgrounds */
+.bg-mesh-dark {
+  background-color: #030712;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.25) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(217, 70, 239, 0.2) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(14, 165, 233, 0.2) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 50%);
+}
+
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(99, 102, 241, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(99, 102, 241, 0.07) 1px, transparent 1px);
+}
+
+.bg-option1-image {
+  background-color: #030712;
+  background-image: linear-gradient(to bottom, rgba(3, 7, 18, 0.35), rgba(15, 23, 42, 0.55)), url('/bg_option1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+.bg-white-opt1 {
+  background-color: #f8fafc;
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.75), rgba(248, 250, 252, 0.88)), url('/white_bg1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.bg-white-opt2 {
+  background-color: #ffffff;
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.85), rgba(248, 250, 252, 0.9)), url('/white_bg2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.bg-white-opt3 {
+  background-color: #faf5ff;
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.7), rgba(250, 245, 255, 0.85)), url('/white_bg3.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.bg-know-more-theme {
+  background-color: #07142F !important;
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, rgba(37, 99, 235, 0.14), transparent 55%),
+    radial-gradient(ellipse at 90% 80%, rgba(16, 42, 86, 0.35), transparent 50%),
+    linear-gradient(180deg, #07142F 0%, #050F24 100%) !important;
+  background-attachment: fixed !important;
+  background-size: cover !important;
+}
+
+/* Subtle wave lines pattern */
+.bg-wave-pattern {
+  background-image: radial-gradient(circle at 1px 1px, rgba(96, 165, 250, 0.05) 1px, transparent 0);
+  background-size: 32px 32px;
+}
+
+/* ================= CAMPUSHUB UNIFIED MIDNIGHT NAVY + ROYAL BLUE THEME ================= */
+/* Standard Surface Card (16-20px radius, soft depth, clean border) */
+.campushub-card {
+  background-color: #0D2145 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 1.125rem !important; /* 18px */
+  color: #F8FAFC !important;
+  box-shadow: 0 10px 25px -5px rgba(3, 10, 26, 0.4), 0 8px 10px -6px rgba(3, 10, 26, 0.3) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.campushub-card:hover {
+  border-color: rgba(59, 130, 246, 0.28) !important;
+}
+
+/* Elevated Surface Card for Dropdowns & Modals (#102A56) */
+.campushub-card-elevated {
+  background-color: #102A56 !important;
+  border: 1px solid rgba(59, 130, 246, 0.22) !important;
+  border-radius: 1.125rem !important;
+  color: #F8FAFC !important;
+  box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Form Inputs & Fields (#0B1B3A surface) */
+.campushub-input {
+  background-color: #0B1B3A !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #F8FAFC !important;
+  border-radius: 0.875rem !important;
+}
+
+.campushub-input:focus {
+  border-color: #3B82F6 !important;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25) !important;
+}
+
+/* Primary Brand Action Button (#2563EB -> #3B82F6) */
+.btn-hub-primary {
+  background-color: #2563EB !important;
+  color: #F8FAFC !important;
+  font-weight: 700 !important;
+  transition: all 0.18s ease-in-out !important;
+}
+
+.btn-hub-primary:hover {
+  background-color: #3B82F6 !important;
+  box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.35) !important;
+}
+
+.btn-hub-primary:active {
+  transform: scale(0.98);
+}
+
+/* Nav Surface */
+.campushub-nav {
+  background-color: rgba(11, 27, 58, 0.88) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+/* ================= PREVENT HORIZONTAL SCROLLBARS GLOBALLY ================= */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Hide horizontal scrollbar completely across all browsers */
+*::-webkit-scrollbar:horizontal {
+  display: none !important;
+  height: 0 !important;
+  width: 0 !important;
+}
+
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-none::-webkit-scrollbar {
+  display: none !important;
+  height: 0 !important;
+  width: 0 !important;
+}
+
+.no-scrollbar,
+.scrollbar-none {
+  -ms-overflow-style: none !important; /* IE and Edge */
+  scrollbar-width: none !important; /* Firefox */
+}
+
+/* ================= LIGHT THEME OVERRIDES ================= */
+html.light,
+html.light body,
+[data-theme="light"],
+[data-theme="light"] body {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  color-scheme: light;
+}
+
+html.light .bg-know-more-theme,
+[data-theme="light"] .bg-know-more-theme {
+  background-color: #f1f5f9 !important;
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, rgba(59, 130, 246, 0.08), transparent 60%),
+    radial-gradient(ellipse at 90% 80%, rgba(203, 213, 225, 0.4), transparent 50%),
+    linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%) !important;
+  color: #0f172a !important;
+}
+
+html.light .bg-wave-pattern,
+[data-theme="light"] .bg-wave-pattern {
+  background-image: radial-gradient(circle at 1px 1px, rgba(148, 163, 184, 0.25) 1px, transparent 0) !important;
+  opacity: 0.6 !important;
+}
+
+/* Sidebar & Navigation in Light Mode */
+html.light aside,
+[data-theme="light"] aside {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06) !important;
+}
+
+html.light aside a,
+html.light aside button,
+html.light aside span,
+html.light aside p,
+html.light aside h1,
+html.light aside h2,
+html.light aside h3,
+[data-theme="light"] aside a,
+[data-theme="light"] aside span,
+[data-theme="light"] aside p {
+  color: #1e293b !important;
+}
+
+html.light header,
+[data-theme="light"] header {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Light mode cards and modals */
+html.light .campushub-card,
+html.light .campushub-elevated-card,
+[data-theme="light"] .campushub-card,
+[data-theme="light"] .campushub-elevated-card {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+  box-shadow: 0 4px 15px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light [class*="bg-[#07142F]"],
+html.light [class*="bg-[#0B1528]"],
+html.light [class*="bg-[#0d1c38]"],
+html.light [class*="bg-[#08152e]"],
+html.light [class*="bg-[#0a1628]"],
+html.light [class*="bg-[#09101f]"],
+[data-theme="light"] [class*="bg-[#07142F]"],
+[data-theme="light"] [class*="bg-[#0B1528]"],
+[data-theme="light"] [class*="bg-[#0d1c38]"],
+[data-theme="light"] [class*="bg-[#08152e]"],
+[data-theme="light"] [class*="bg-[#0a1628]"],
+[data-theme="light"] [class*="bg-[#09101f]"] {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+html.light .text-white,
+[data-theme="light"] .text-white {
+  color: #0f172a !important;
+}
+
+html.light .text-slate-100,
+html.light .text-slate-200,
+html.light .text-slate-300,
+[data-theme="light"] .text-slate-100,
+[data-theme="light"] .text-slate-200,
+[data-theme="light"] .text-slate-300 {
+  color: #334155 !important;
+}
+
+html.light .text-slate-400,
+[data-theme="light"] .text-slate-400 {
+  color: #64748b !important;
+}
+
+html.light .border-white\/10,
+html.light .border-white\/5,
+html.light .border-white\/15,
+html.light .border-white\/20,
+[data-theme="light"] .border-white\/10,
+[data-theme="light"] .border-white\/5,
+[data-theme="light"] .border-white\/15,
+[data-theme="light"] .border-white\/20 {
+  border-color: #e2e8f0 !important;
+}
+
+html.light .bg-white\/5,
+html.light .bg-white\/10,
+html.light .bg-white\/15,
+[data-theme="light"] .bg-white\/5,
+[data-theme="light"] .bg-white\/10 {
+  background-color: #f1f5f9 !important;
+}
+
+html.light .bg-slate-900\/60,
+html.light .bg-slate-900\/40,
+html.light .bg-slate-900\/80,
+[data-theme="light"] .bg-slate-900\/60,
+[data-theme="light"] .bg-slate-900\/40 {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+
+
+
+
+
+
