@@ -26,7 +26,8 @@ import {
   ShieldCheck,
   Building2,
   Clock,
-  Trash2
+  Trash2,
+  Camera
 } from "lucide-react"
 import { apiClient } from "@/api/apiClient"
 
@@ -133,6 +134,15 @@ export default function SocialFeed({ feedbacks, onStartChat }) {
     // Optimistically hide from UI immediately
     setHiddenPosts(prev => [...prev, postToDelete.id])
 
+    // Save deleted post ID to blacklist so it never reappears on reload
+    try {
+      const deletedIds = JSON.parse(localStorage.getItem("campussphere_deleted_posts") || "[]")
+      if (!deletedIds.includes(postToDelete.id)) {
+        deletedIds.push(postToDelete.id)
+        localStorage.setItem("campussphere_deleted_posts", JSON.stringify(deletedIds))
+      }
+    } catch (e) {}
+
     // Remove from local storage user posts if present
     try {
       const local = JSON.parse(localStorage.getItem("campushub_user_posts") || "[]")
@@ -140,9 +150,12 @@ export default function SocialFeed({ feedbacks, onStartChat }) {
       localStorage.setItem("campushub_user_posts", JSON.stringify(updatedLocal))
     } catch (e) {}
 
+    // Notify FeedPage or parent components to update their list
+    window.dispatchEvent(new CustomEvent("campussphere_post_deleted", { detail: { id: postToDelete.id } }))
+
     // Remove from Firestore if it has a string ID
     try {
-      if (typeof postToDelete.id === "string") {
+      if (typeof postToDelete.id === "string" && typeof apiClient?.entities?.Feedback?.delete === "function") {
         await apiClient.entities.Feedback.delete(postToDelete.id)
       }
     } catch (err) {

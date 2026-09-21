@@ -48,21 +48,31 @@ export default function FeedPage() {
         new Map(combined.filter(Boolean).map(item => [item.id || item.title || Math.random(), item])).values()
       )
 
-      // Keep all valid posts (media posts, complaints, reviews)
+      // Filter out any posts in the deletion blacklist
+      let deletedIds = []
+      try {
+        deletedIds = JSON.parse(localStorage.getItem("campussphere_deleted_posts") || "[]")
+      } catch {
+        deletedIds = []
+      }
+
+      // Keep all valid, non-deleted posts
       const validPosts = uniquePosts.filter(item => {
-        return Boolean(item && (item.title || item.comment || item.collegeName))
+        return Boolean(item && !deletedIds.includes(item.id) && (item.title || item.comment || item.collegeName))
       })
 
       // Sync local storage so corrected server posts overwrite any stale local cache
       if (Array.isArray(localPosts) && localPosts.length > 0 && Array.isArray(data) && data.length > 0) {
         try {
           const serverMap = new Map(data.filter(Boolean).map(d => [d.id, d]))
-          const updatedLocal = localPosts.map(p => serverMap.get(p.id) || p)
+          const updatedLocal = localPosts
+            .filter(p => !deletedIds.includes(p.id))
+            .map(p => serverMap.get(p.id) || p)
           localStorage.setItem("campushub_user_posts", JSON.stringify(updatedLocal))
         } catch {}
       }
 
-      setFeedbacks(validPosts.length > 0 ? validPosts : data)
+      setFeedbacks(validPosts)
     } catch (e) {
       console.error("Error loading feedbacks:", e)
     } finally {
@@ -101,8 +111,18 @@ export default function FeedPage() {
       }
     }
     window.addEventListener("campushub_post_created", handleNewPost)
+
+    // Real-time listener for deleted posts
+    const handlePostDeleted = (e) => {
+      if (e.detail?.id) {
+        setFeedbacks(prev => prev.filter(p => p.id !== e.detail.id))
+      }
+    }
+    window.addEventListener("campussphere_post_deleted", handlePostDeleted)
+
     return () => {
       window.removeEventListener("campushub_post_created", handleNewPost)
+      window.removeEventListener("campussphere_post_deleted", handlePostDeleted)
       window.removeEventListener("focus", updateUnreadCount)
     }
   }, [])
