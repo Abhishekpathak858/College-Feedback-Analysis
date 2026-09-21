@@ -20,7 +20,7 @@ import {
   orderBy 
 } from "firebase/firestore";
 
-// Helper for sentiment analysis (copied from base44Client)
+// Core heuristic engine for real-time sentiment classification
 export function analyzeSentiment(text, rating = 3) {
   if (!text || text.trim().length === 0) {
     if (rating >= 4) return { sentiment: "Good 👍", score: 0.7, tags: ["High Rating"] };
@@ -474,10 +474,11 @@ class FirebaseClient {
 
   getSystemLogs = async () => {
     return [
-      "[SYSTEM] Switched to Live Firebase Firestore Cloud Database.",
+      "[SYSTEM] Connected to Cloud Firestore Database.",
       "[AUTH] Connected to Firebase Authentication."
     ];
   }
 }
 
-export const base44Client = new FirebaseClient();
+export const apiClient = new FirebaseClient();
+

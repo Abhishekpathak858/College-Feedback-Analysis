@@ -22,7 +22,7 @@ export default function TerminalFooter() {
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> System Online
               </span>
               <span>•</span>
-              <span>Base44 v1.0.0</span>
+              <span>CampusSphere Core v1.0.0</span>
             </div>
           </div>
 

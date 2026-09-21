@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react"
-import { base44Client } from "@/api/base44Client"
+import { apiClient } from "@/api/apiClient"
 import { triggerPartyPopperConfetti } from "@/lib/celebration"
 
 const AuthContext = createContext(null)
@@ -11,7 +11,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     async function checkAuth() {
       try {
-        const currentUser = await base44Client.auth.getCurrentUser()
+        const currentUser = await apiClient.auth.getCurrentUser()
         // Check saved profile photo from localStorage
         const savedAvatar = localStorage.getItem("user_profile_avatar")
         let customProfile = {}
@@ -34,7 +34,7 @@ export function AuthProvider({ children }) {
   }, [])
 
   const login = async (email, password) => {
-    const loggedUser = await base44Client.auth.login(email, password)
+    const loggedUser = await apiClient.auth.login(email, password)
     const savedAvatar = localStorage.getItem("user_profile_avatar")
     let customProfile = {}
     try {
@@ -48,7 +48,7 @@ export function AuthProvider({ children }) {
   }
 
   const register = async (userData) => {
-    const newUser = await base44Client.auth.register(userData)
+    const newUser = await apiClient.auth.register(userData)
     setUser(newUser)
     sessionStorage.setItem("show_welcome_celebration", "true")
     triggerPartyPopperConfetti()
@@ -56,7 +56,7 @@ export function AuthProvider({ children }) {
   }
 
   const loginWithGoogle = async () => {
-    const googleUser = await base44Client.auth.loginWithGoogle()
+    const googleUser = await apiClient.auth.loginWithGoogle()
     setUser(googleUser)
     return googleUser
   }
@@ -76,7 +76,7 @@ export function AuthProvider({ children }) {
     try {
       const targetId = data?.id || user?.id || user?.uid
       if (targetId) {
-        await base44Client.auth.updateProfile(targetId, data)
+        await apiClient.auth.updateProfile(targetId, data)
       }
     } catch (e) {
       console.warn("Could not sync profile update:", e)
@@ -90,7 +90,7 @@ export function AuthProvider({ children }) {
       localStorage.removeItem("campushub_conversations")
       localStorage.removeItem("campushub_messages_map")
     } catch {}
-    await base44Client.auth.logout()
+    await apiClient.auth.logout()
     setUser(null)
   }
 

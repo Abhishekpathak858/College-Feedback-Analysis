@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { useAuth } from "@/lib/AuthContext"
-import { base44Client } from "@/api/base44Client"
+import { apiClient } from "@/api/apiClient"
 import Hero from "@/components/Hero"
 import FeedbackForm from "@/components/FeedbackForm"
 import AnalyticsDashboard from "@/components/AnalyticsDashboard"
@@ -50,7 +50,7 @@ export default function Home() {
   const loadFeedbacks = async () => {
     try {
       setLoading(true)
-      const data = await base44Client.entities.Feedback.list()
+      const data = await apiClient.entities.Feedback.list()
       setFeedbacks(data)
     } catch (e) {
       console.error(e)

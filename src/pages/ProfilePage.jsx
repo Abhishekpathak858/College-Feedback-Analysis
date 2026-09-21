@@ -4,7 +4,7 @@ import { useAuth } from "@/lib/AuthContext"
 import { useToast } from "@/components/ui/use-toast"
 import { useTheme } from "@/lib/ThemeContext"
 import { useLanguage } from "@/lib/LanguageContext"
-import { base44Client } from "@/api/base44Client"
+import { apiClient } from "@/api/apiClient"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -332,7 +332,7 @@ export default function ProfilePage() {
   useEffect(() => {
     async function fetchUserActivity() {
       try {
-        const allFeedbacks = await base44Client.entities.Feedback.list()
+        const allFeedbacks = await apiClient.entities.Feedback.list()
         const feedList = Array.isArray(allFeedbacks) ? allFeedbacks : []
 
         let localPosts = []

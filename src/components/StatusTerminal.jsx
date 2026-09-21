@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
-import { base44Client } from "@/api/base44Client"
+import { apiClient } from "@/api/apiClient"
 import { Terminal, Shield, CheckCircle, RefreshCw, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -9,7 +9,7 @@ export default function StatusTerminal() {
   const logContainerRef = useRef(null)
 
   const fetchLogs = async () => {
-    const freshLogs = await base44Client.getSystemLogs()
+    const freshLogs = await apiClient.getSystemLogs()
     setLogs(freshLogs)
   }
 

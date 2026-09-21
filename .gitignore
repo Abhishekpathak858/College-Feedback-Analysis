@@ -29,3 +29,5 @@ dist-ssr
 .vercel
 *adminsdk*.json
 serviceAccountKey*.json
+AGENTS.md
+base44/

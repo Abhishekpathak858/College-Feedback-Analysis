@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { base44Client } from "@/api/base44Client"
+import { apiClient } from "@/api/apiClient"
 import { useAuth } from "@/lib/AuthContext"
 import { Image, Trash2 } from "lucide-react"
 
@@ -11,7 +11,7 @@ export default function MyPostsPage() {
   const loadPosts = async () => {
     try {
       setLoading(true)
-      const allFeedbacks = await base44Client.entities.Feedback.list()
+      const allFeedbacks = await apiClient.entities.Feedback.list()
       let localPosts = []
       try {
         localPosts = JSON.parse(localStorage.getItem("campushub_user_posts") || "[]")
@@ -39,7 +39,7 @@ export default function MyPostsPage() {
   const handleDeletePost = async (postId) => {
     if (!window.confirm("Are you sure you want to delete this post?")) return
     try {
-      await base44Client.entities.Feedback.delete(postId)
+      await apiClient.entities.Feedback.delete(postId)
       try {
         const localPosts = JSON.parse(localStorage.getItem("campushub_user_posts") || "[]")
         const updatedLocal = localPosts.filter(p => p.id !== postId)

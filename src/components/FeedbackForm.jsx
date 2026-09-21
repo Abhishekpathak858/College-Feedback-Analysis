@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useAuth } from "@/lib/AuthContext"
-import { base44Client, analyzeSentiment } from "@/api/base44Client"
+import { apiClient, analyzeSentiment } from "@/api/apiClient"
 import { FEEDBACK_CATEGORIES, FACULTY_FEEDBACK_CATEGORIES, DEPARTMENTS, YEARS_OF_STUDY, AKTU_COLLEGES, COURSES, UP_DISTRICTS } from "@/lib/categories"
 import CollegeAutocomplete from "@/components/CollegeAutocomplete"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
@@ -238,7 +238,7 @@ export default function FeedbackForm({ onFeedbackSubmitted }) {
         submittedAt: new Date().toLocaleString()
       }
 
-      const created = await base44Client.entities.Feedback.create(submissionData)
+      const created = await apiClient.entities.Feedback.create(submissionData)
 
       toast({
         title: "Review Submitted Successfully! ⭐",

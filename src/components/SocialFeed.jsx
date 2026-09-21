@@ -28,7 +28,7 @@ import {
   Clock,
   Trash2
 } from "lucide-react"
-import { base44Client } from "@/api/base44Client"
+import { apiClient } from "@/api/apiClient"
 
 function formatPostTime(dateString) {
   if (!dateString) return "2 hours ago"
@@ -116,7 +116,7 @@ export default function SocialFeed({ feedbacks, onStartChat }) {
     // Remove from Firestore if it has a string ID
     try {
       if (typeof postToDelete.id === "string") {
-        await base44Client.entities.Feedback.delete(postToDelete.id)
+        await apiClient.entities.Feedback.delete(postToDelete.id)
       }
     } catch (err) {
       console.error("Error deleting from database:", err)

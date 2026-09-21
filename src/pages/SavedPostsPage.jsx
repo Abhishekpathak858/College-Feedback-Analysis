@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { base44Client } from "@/api/base44Client"
+import { apiClient } from "@/api/apiClient"
 import { Card } from "@/components/ui/card"
 import { Bookmark } from "lucide-react"
 
@@ -11,7 +11,7 @@ export default function SavedPostsPage() {
     async function loadSaved() {
       try {
         setLoading(true)
-        const allFeedbacks = await base44Client.entities.Feedback.list()
+        const allFeedbacks = await apiClient.entities.Feedback.list()
         let localPosts = []
         try {
           localPosts = JSON.parse(localStorage.getItem("campushub_user_posts") || "[]")

@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from "react"
 import { Search, Heart, Star, Building2, MapPin, X, ChevronRight } from "lucide-react"
 import { ALL_AKTU_COLLEGES } from "@/lib/collegeData"
 import CollegeDetailsView from "@/components/CollegeDetailsView"
-import { base44Client } from "@/api/base44Client"
+import { apiClient } from "@/api/apiClient"
 
 export default function ExploreCollegesPage() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -23,7 +23,7 @@ export default function ExploreCollegesPage() {
     let isMounted = true
     const loadRealRatings = async () => {
       try {
-        const allFeedbacks = await base44Client.entities.Feedback.list()
+        const allFeedbacks = await apiClient.entities.Feedback.list()
         if (!isMounted || !Array.isArray(allFeedbacks)) return
 
         const norm = (str) => (str || "").toLowerCase().replace(/[^a-z0-9]/g, "")

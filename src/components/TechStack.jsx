@@ -7,7 +7,7 @@ const STACK_ITEMS = [
   { label: "AI Sentiment Polarity Engine", category: "NLP & AI", icon: Code2 },
   { label: "Tailwind CSS & Shadcn UI", category: "Design System", icon: Cpu },
   { label: "Recharts Visualizations", category: "Analytics", icon: BarChart3 },
-  { label: "Base44 Entity Connector", category: "Backend / Database", icon: Database },
+  { label: "Firebase Firestore & Cloud REST API", category: "Backend / Database", icon: Database },
   { label: "Role-Based Auth & OAuth", category: "Security", icon: ShieldCheck },
   { label: "Real-time Event Stream", category: "Monitoring", icon: Radio },
 ]

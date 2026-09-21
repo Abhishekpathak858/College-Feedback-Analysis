@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react"
-import { base44Client } from "@/api/base44Client"
+import { apiClient } from "@/api/apiClient"
 import {
   ArrowLeft,
   Share2,
@@ -133,7 +133,7 @@ export default function CollegeDetailsView({ college, onBack }) {
     const loadReviews = async () => {
       try {
         setLoadingReviews(true)
-        const allFeedbacks = await base44Client.entities.Feedback.list()
+        const allFeedbacks = await apiClient.entities.Feedback.list()
         const norm = (str) => (str || "").toLowerCase().replace(/[^a-z0-9]/g, "")
         const collegeKey = norm(college?.name)
         const matched = (allFeedbacks || []).filter(item => {

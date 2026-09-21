@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { base44Client } from "@/api/base44Client"
+import { apiClient } from "@/api/apiClient"
 import { useAuth } from "@/lib/AuthContext"
 import { useToast } from "@/components/ui/use-toast"
 import { Button } from "@/components/ui/button"
@@ -114,7 +114,7 @@ export default function AdmissionHelpForm() {
     if (!isAdmin) return
     try {
       setLoadingApps(true)
-      const list = await base44Client.entities.AdmissionApplication.list()
+      const list = await apiClient.entities.AdmissionApplication.list()
       setApplications(list)
     } catch (err) {
       console.error("Error loading admission applications:", err)
@@ -193,7 +193,7 @@ export default function AdmissionHelpForm() {
         otherDetails: sanitizeInput(formData.otherDetails || ""),
       }
 
-      await base44Client.entities.AdmissionApplication.create(sanitizedData)
+      await apiClient.entities.AdmissionApplication.create(sanitizedData)
       setHasSubmitted(true)
       toast({
         title: "🎉 Application Received!",
@@ -272,7 +272,7 @@ export default function AdmissionHelpForm() {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to remove this admission application?")) return
     try {
-      await base44Client.entities.AdmissionApplication.delete(id)
+      await apiClient.entities.AdmissionApplication.delete(id)
       setApplications(prev => prev.filter(a => a.id !== id))
       toast({
         title: "Application Deleted",

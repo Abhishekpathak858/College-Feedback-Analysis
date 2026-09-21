@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { base44Client } from "@/api/base44Client"
+import { apiClient } from "@/api/apiClient"
 import AIRecommender from "@/components/AIRecommender"
 
 export default function AnalyticsPage() {
@@ -10,7 +10,7 @@ export default function AnalyticsPage() {
     async function loadData() {
       try {
         setLoading(true)
-        const data = await base44Client.entities.Feedback.list()
+        const data = await apiClient.entities.Feedback.list()
         setFeedbacks(data || [])
       } catch (e) {
         console.error(e)

@@ -8,7 +8,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { Image, Video, Send, AlertCircle, Camera, Upload, Film, PartyPopper, Star, Plus } from "lucide-react"
 import { triggerPartyPopperConfetti } from "@/lib/celebration"
 import { useAuth } from "@/lib/AuthContext"
-import { base44Client, analyzeSentiment } from "@/api/base44Client"
+import { apiClient, analyzeSentiment } from "@/api/apiClient"
 import { validateMediaFile, checkRateLimit, sanitizeInput } from "@/lib/utils"
 
 export default function CreatePostModal({ isOpen, onClose, onPostCreated }) {
@@ -204,7 +204,7 @@ export default function CreatePostModal({ isOpen, onClose, onPostCreated }) {
 
     try {
       // Save directly to Firestore Database
-      const savedDoc = await base44Client.entities.Feedback.create(newPost)
+      const savedDoc = await apiClient.entities.Feedback.create(newPost)
       const postWithId = { ...newPost, id: savedDoc.id || Date.now() }
 
       // Also persist to localStorage for instant local availability

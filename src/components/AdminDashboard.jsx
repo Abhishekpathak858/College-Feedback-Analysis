@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { base44Client } from "@/api/base44Client"
+import { apiClient } from "@/api/apiClient"
 import { ShieldAlert, CheckCircle2, MapPin, XCircle, Download, FileText, Printer, Users, Trash2, Mail, GraduationCap, Building2, Eye, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
@@ -17,7 +17,7 @@ export default function AdminDashboard({ feedbacks, onUpdate }) {
   const loadUsers = async () => {
     try {
       setLoadingUsers(true)
-      const data = await base44Client.entities.User.list()
+      const data = await apiClient.entities.User.list()
       setUsersList(data)
     } catch (e) {
       console.error("Error loading users:", e)
@@ -33,7 +33,7 @@ export default function AdminDashboard({ feedbacks, onUpdate }) {
   const handleDeleteUser = async (userId, userEmail) => {
     if (!window.confirm(`Are you sure you want to delete user account: ${userEmail}?`)) return
     try {
-      await base44Client.entities.User.delete(userId)
+      await apiClient.entities.User.delete(userId)
       setUsersList(prev => prev.filter(u => u.id !== userId))
       toast({
         title: "User Account Deleted",
@@ -56,7 +56,7 @@ export default function AdminDashboard({ feedbacks, onUpdate }) {
   const handleResolve = async (id) => {
     try {
       setLoadingId(id)
-      await base44Client.entities.Feedback.updateStatus(id, "Resolved")
+      await apiClient.entities.Feedback.updateStatus(id, "Resolved")
       toast({
         title: "Complaint Resolved",
         description: "The feedback status has been updated successfully.",

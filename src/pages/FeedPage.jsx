@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
-import { base44Client } from "@/api/base44Client"
+import { apiClient } from "@/api/apiClient"
 import { useAuth } from "@/lib/AuthContext"
 import SocialFeed from "@/components/SocialFeed"
 import { Search, Filter, Flame, RefreshCw, Plus, Bell } from "lucide-react"
@@ -21,7 +21,7 @@ export default function FeedPage() {
   const loadFeedbacks = async () => {
     try {
       setLoading(true)
-      const data = await base44Client.entities.Feedback.list()
+      const data = await apiClient.entities.Feedback.list()
       
       // Merge with newly created posts saved in localStorage
       let localPosts = []
